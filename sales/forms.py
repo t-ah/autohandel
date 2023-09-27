@@ -1,10 +1,9 @@
 from django import forms
-
-from sales.models import Invoice, Client, Car, Item
+from sales.models import Invoice, Client, Car
 
 class InvoiceForm(forms.ModelForm):
-    load_client = forms.ModelChoiceField(Client.objects.all(), label="Kundendaten übernehmen", required=False)
-    load_car = forms.ModelChoiceField(Car.objects.filter(sold=False), label="Fahrzeug hinzufügen", required=False)
+    load_client = forms.ModelChoiceField(Client.objects.all(), label="Kundendaten einfügen", required=False)
+    load_car = forms.ModelChoiceField(Car.objects.filter(sold=False), label="Fahrzeugdaten einfügen", required=False)
 
     class Meta:
         model = Invoice
@@ -22,17 +21,16 @@ class InvoiceForm(forms.ModelForm):
             cdata["area_code"] = client.area_code
 
         car_id = self.data["load_car"]
-        if car_id: # mark car sold and add as item to invoice
+        if car_id: # mark car sold and set (shared car data) fields of invoice
             car = Car.objects.get(pk=car_id)
             car.sold = True
             car.save()
-            
-            new_item = Item.objects.create(index=0, invoice_id=self.instance.id)
-            # new_item.index = 0
-            # new_item.invoice = Invoice.objects.get(cdata["pk"])
-            print(f"INVOICE {new_item.invoice}")
-            new_item.name = car.__str__()
-            new_item.tax = 19 # TODO use default tax configured somewhere
-            new_item.save()
+            cdata["make"] = car.make
+            cdata["model"] = car.model
+            cdata["serial_number"] = car.serial_number
+            cdata["year"] = car.year
+            cdata["colour"] = car.colour
+            cdata["letter_no"] = car.letter_no
+            cdata["odo"] = car.odo
 
         return cdata

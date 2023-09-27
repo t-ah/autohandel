@@ -1,16 +1,11 @@
 from django.contrib import admin
 from adminsortable2.admin import SortableAdminBase, SortableTabularInline
 
-from sales.models import Car, Client, Invoice, Item
+from sales.models import Car, Client, Invoice
 from sales.forms import InvoiceForm
 
 
-class ItemInline(SortableTabularInline):
-    model = Item
-
-
-class InvoiceAdmin(SortableAdminBase, admin.ModelAdmin):
-    inlines = [ItemInline,]
+class InvoiceAdmin(SortableAdminBase, admin.ModelAdmin): # sortable kann eigentlich raus?
     actions = ["make_PDF"]
     change_form_template = 'sales/invoice/change_form.html'
     form = InvoiceForm
