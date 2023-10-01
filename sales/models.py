@@ -4,6 +4,7 @@ import datetime
 
 # changes to fields need to be reflected in forms.py!
 class SharedClientData(models.Model):
+    title       = models.CharField("Anrede", max_length=64, default="")
     client_name = models.CharField("Name", max_length=200, default="")
     street      = models.CharField("Straße", max_length=200, default="")
     area_code   = models.PositiveIntegerField("PLZ", default=0)
@@ -21,6 +22,8 @@ class SharedCarData(models.Model):
     odo             = models.PositiveIntegerField("KM-Stand", default=0)
     serial_number   = models.CharField("Fahrgestellnummer", max_length=200, default="0")
     year            = models.DateField("Erstzulassung", default=datetime.date.today)
+    capacity        = models.CharField("Hubraum", max_length=20, default="", blank=True)
+    power_output    = models.CharField("PS/kW", max_length=20, default="", blank=True)
     
     class Meta:
         abstract = True
@@ -52,11 +55,29 @@ def get_new_invoice_number():
         return 1
 
 class Invoice(SharedClientData, SharedCarData):
+    PAYMENT_CASH = "c"
+    PAYMENT_TRANSFER = "t"
+    PAYMENT_CHOICES = [
+        (PAYMENT_CASH, "Bar"),
+        (PAYMENT_TRANSFER, "Überweisung"),
+    ]
+    TERMS_25a_DIFF = "25a"
+    TERMS_6a_IGL = "6a"
+    TERMS_4_NON_EU = "4"
+    TERMS_4_EU = "4eu"
+    TERMS_CHOICES = [
+        (TERMS_25a_DIFF, "§ 25a Differenzbesteuerung"),
+        (TERMS_6a_IGL, "§ 6a Innergemeinschaftliche Lieferung"),
+        (TERMS_4_NON_EU, "§ 4 Netto-Verkauf (Nicht-EU)"),
+        (TERMS_4_EU, "§ 4 Netto-Verkauf (EU)"),
+    ]
     number   = models.IntegerField("Rechnungsnummer", unique=True, default=get_new_invoice_number)
     date     = models.DateField("Rechnungsdatum", default=datetime.date.today)
-    value    = models.DecimalField("Betrag", max_digits=10, decimal_places=2, default=Decimal("0.00"))
+    value    = models.DecimalField("Betrag (brutto)", max_digits=10, decimal_places=2, default=Decimal("0.00"))
     tax      = models.IntegerField("MWSt", default=19)
     complete = models.BooleanField("Abgeschlossen", default=False)
+    payment  = models.CharField("Zahlungsmethode", max_length=2, choices=PAYMENT_CHOICES, default=PAYMENT_CASH)
+    terms    = models.CharField("Bedingungen", max_length=5, choices=TERMS_CHOICES, default=TERMS_25a_DIFF)
 
     def __str__(self) -> str:
         return f"#{self.number} vom {self.date}"
