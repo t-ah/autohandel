@@ -423,4 +423,5 @@ def pdf(request, id: int):
     p.save()
 
     buffer.seek(0)
-    return FileResponse(buffer, as_attachment=False, filename=f"rechnung-{invoice.number}.pdf")  # TODO as_attachment=True für öffnen und runterladen
+    download_file = True
+    return FileResponse(buffer, as_attachment=download_file, filename=f"rechnung-{invoice.number}.pdf")
