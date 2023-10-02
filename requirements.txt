@@ -1,3 +1,4 @@
+virtualenv
 Django
 django-admin-sortable2
 django-dynamic-preferences
