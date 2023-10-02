@@ -9,6 +9,9 @@ class SharedClientData(models.Model):
     street      = models.CharField("Straße", max_length=200, default="")
     area_code   = models.PositiveIntegerField("PLZ", default=0)
     city        = models.CharField("Stadt", max_length=200, default="")
+    telephone   = models.CharField("Telefon", max_length=50, default="", blank=True)
+    id_tax_id   = models.CharField("Ausweis- und/oder Steuernr.", max_length=100, default="", blank=True)
+    # changes to fields need to be reflected in forms.py!
     
     class Meta:
         abstract = True
@@ -24,6 +27,9 @@ class SharedCarData(models.Model):
     year            = models.DateField("Erstzulassung", default=datetime.date.today)
     capacity        = models.CharField("Hubraum", max_length=20, default="", blank=True)
     power_output    = models.CharField("PS/kW", max_length=20, default="", blank=True)
+    tuev_au         = models.CharField("TÜV/AU", max_length=20, default="", blank=True)
+    plate           = models.CharField("Kennzeichen", max_length=20, default="", blank=True)
+    # changes to fields need to be reflected in forms.py!
     
     class Meta:
         abstract = True
@@ -75,9 +81,9 @@ class Invoice(SharedClientData, SharedCarData):
     date     = models.DateField("Rechnungsdatum", default=datetime.date.today)
     value    = models.DecimalField("Betrag (brutto)", max_digits=10, decimal_places=2, default=Decimal("0.00"))
     tax      = models.IntegerField("MWSt", default=19)
-    complete = models.BooleanField("Abgeschlossen", default=False)
     payment  = models.CharField("Zahlungsmethode", max_length=2, choices=PAYMENT_CHOICES, default=PAYMENT_CASH)
     terms    = models.CharField("Bedingungen", max_length=5, choices=TERMS_CHOICES, default=TERMS_25a_DIFF)
+    complete = models.BooleanField("Abgeschlossen", default=False)
 
     def __str__(self) -> str:
         return f"#{self.number} vom {self.date}"

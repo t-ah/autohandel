@@ -15,6 +15,10 @@ class InvoiceAdmin(SortableAdminBase, admin.ModelAdmin): # sortable kann eigentl
         pass # template redirects to view
 
 
+admin.site.site_header = "Autohandel"
+admin.site.site_title = "Autohandel"
+admin.site.index_title = "Autohandel Rechnungen etc."
+
 admin.site.register(Car)
 admin.site.register(Client)
 admin.site.register(Invoice, InvoiceAdmin)

@@ -15,10 +15,13 @@ class InvoiceForm(forms.ModelForm):
         client_id = self.data["load_client"]
         if client_id:
             client = Client.objects.get(pk=client_id)
+            cdata["title"] = client.title
             cdata["client_name"] = client.client_name
             cdata["street"] = client.street
-            cdata["city"] = client.city
             cdata["area_code"] = client.area_code
+            cdata["city"] = client.city
+            cdata["telephone"] = client.telephone
+            cdata["id_tax_id"] = client.id_tax_id
 
         car_id = self.data["load_car"]
         if car_id: # mark car sold and set (shared car data) fields of invoice
@@ -27,10 +30,14 @@ class InvoiceForm(forms.ModelForm):
             car.save()
             cdata["make"] = car.make
             cdata["model"] = car.model
-            cdata["serial_number"] = car.serial_number
-            cdata["year"] = car.year
             cdata["colour"] = car.colour
             cdata["letter_no"] = car.letter_no
             cdata["odo"] = car.odo
+            cdata["serial_number"] = car.serial_number
+            cdata["year"] = car.year
+            cdata["capacity"] = car.capacity
+            cdata["power_output"] = car.power_output
+            cdata["tuev_au"] = car.tuev_au
+            cdata["plate"] = car.plate
 
         return cdata
