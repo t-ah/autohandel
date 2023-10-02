@@ -9,7 +9,7 @@ from dynamic_preferences.registries import global_preferences_registry
 from .models import Invoice
 
 
-def index(request):
+def index(_):
     return HttpResponse("Hallo Welt. Hier werden Autos verkauft.")
 
 def brutto_to_netto(brutto_val: Decimal, tax: int):
@@ -23,7 +23,7 @@ def drawField(p: canvas.Canvas, description: str, value: str, x: int, y: int, le
     p.drawString(x, y + 9, description)
 
 # It is said that reportlab is not thread-safe. We shall ignore that here since parallel usage is not to be expected.
-def pdf(request, id: int):
+def pdf(_, id: int):
     prefs = global_preferences_registry.manager()
 
     invoice = Invoice.objects.get(pk=id)
