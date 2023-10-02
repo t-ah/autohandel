@@ -5,10 +5,21 @@ from sales.models import Car, Client, Invoice
 from sales.forms import InvoiceForm
 
 
+class CarAdmin(admin.ModelAdmin):
+    list_filter = ("sold", "make",)
+    search_fields = ("serial_number__startswith", "make__startswith")
+
+
+class ClientAdmin(admin.ModelAdmin):
+    search_fields = ("client_name__contains",)
+
+
 class InvoiceAdmin(SortableAdminBase, admin.ModelAdmin): # sortable kann eigentlich raus?
     actions = ["make_PDF"]
     change_form_template = 'sales/invoice/change_form.html'
     form = InvoiceForm
+    list_filter = ("make",)
+    search_fields = ("number__startswith", "make__startswith")
     
     @admin.action(description="Als PDF anzeigen")
     def make_PDF(self, request, queryset):
@@ -19,6 +30,6 @@ admin.site.site_header = "Autohandel"
 admin.site.site_title = "Autohandel"
 admin.site.index_title = "Autohandel Rechnungen etc."
 
-admin.site.register(Car)
-admin.site.register(Client)
+admin.site.register(Car, CarAdmin)
+admin.site.register(Client, ClientAdmin)
 admin.site.register(Invoice, InvoiceAdmin)

@@ -4,11 +4,11 @@ import datetime
 
 # changes to fields need to be reflected in forms.py!
 class SharedClientData(models.Model):
-    title       = models.CharField("Anrede", max_length=64, default="")
-    client_name = models.CharField("Name", max_length=200, default="")
-    street      = models.CharField("Straße", max_length=200, default="")
+    title       = models.CharField("Anrede", max_length=64, default="", blank=True)
+    client_name = models.CharField("Name", max_length=200, default="", blank=True)
+    street      = models.CharField("Straße", max_length=200, default="", blank=True)
     area_code   = models.PositiveIntegerField("PLZ", default=0)
-    city        = models.CharField("Stadt", max_length=200, default="")
+    city        = models.CharField("Stadt", max_length=200, default="", blank=True)
     telephone   = models.CharField("Telefon", max_length=50, default="", blank=True)
     id_tax_id   = models.CharField("Ausweis- und/oder Steuernr.", max_length=100, default="", blank=True)
     # changes to fields need to be reflected in forms.py!
@@ -18,10 +18,10 @@ class SharedClientData(models.Model):
 
 # changes to fields need to be reflected in forms.py!
 class SharedCarData(models.Model):
-    make            = models.CharField("Marke", max_length=200, default="")
-    model           = models.CharField("Modell", max_length=200, default="")
-    colour          = models.CharField("Farbe", max_length=200, default="")
-    letter_no       = models.CharField("KFZ-Brief-Nr.", max_length=100, default="")
+    make            = models.CharField("Marke", max_length=200, default="", blank=True)
+    model           = models.CharField("Modell", max_length=200, default="", blank=True)
+    colour          = models.CharField("Farbe", max_length=200, default="", blank=True)
+    letter_no       = models.CharField("KFZ-Brief-Nr.", max_length=100, default="", blank=True)
     odo             = models.PositiveIntegerField("KM-Stand", default=0)
     serial_number   = models.CharField("Fahrgestellnummer", max_length=200, default="0")
     year            = models.DateField("Erstzulassung", default=datetime.date.today)
@@ -39,7 +39,7 @@ class Car(SharedCarData):
     sold = models.BooleanField("Verkauft", default=False)
 
     def __str__(self):
-        return f"{self.make} {self.model} EZL: {self.year} S/N: {self.serial_number}"
+        return f"{self.make} {self.model} EZL: {Invoice.short_date(self.year)} S/N: {self.serial_number}"
     
     class Meta:
         verbose_name = "Fahrzeug"
@@ -85,8 +85,16 @@ class Invoice(SharedClientData, SharedCarData):
     terms    = models.CharField("Bedingungen", max_length=5, choices=TERMS_CHOICES, default=TERMS_25a_DIFF)
     complete = models.BooleanField("Abgeschlossen", default=False)
 
+    @classmethod
+    def convert_date(cls, date):
+        return "{:%d. %B %Y}".format(date)
+
+    @classmethod
+    def short_date(cls, date):
+        return "{:%d.%m.%Y}".format(date)
+    
     def __str__(self) -> str:
-        return f"#{self.number} vom {self.date}"
+        return f"#{self.number} vom {Invoice.short_date(self.date)} : {self.make} {self.model}"
 
     class Meta:
         verbose_name = "Rechnung"

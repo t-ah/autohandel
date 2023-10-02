@@ -12,12 +12,6 @@ from .models import Invoice
 def index(request):
     return HttpResponse("Hallo Welt. Hier werden Autos verkauft.")
 
-def convert_date(date):
-    return "{:%d. %B %Y}".format(date)
-
-def short_date(date):
-    return "{:%d.%m.%Y}".format(date)
-
 def brutto_to_netto(brutto_val: Decimal, tax: int):
     return round(brutto_val / Decimal((100 + tax) / 100), 2)
 
@@ -94,7 +88,7 @@ def pdf(request, id: int):
     p.drawString(margin + right_column_offset, y, invoice.serial_number)
     y += 12
     p.drawString(margin, y, "Erstzulassung:")
-    p.drawString(margin + right_column_offset, y, convert_date(invoice.year))
+    p.drawString(margin + right_column_offset, y, Invoice.convert_date(invoice.year))
     y += 12
     p.drawString(margin, y, "Farbe:")
     p.drawString(margin + right_column_offset, y, invoice.colour)
@@ -147,7 +141,7 @@ def pdf(request, id: int):
     p.setFont("Helvetica", 11)
     p.drawString(margin, y, "Lieferdatum entspricht Rechnungsdatum.")
     y += 12
-    p.drawString(margin, y, f"Goslar, den {convert_date(invoice.date)}")
+    p.drawString(margin, y, f"Goslar, den {Invoice.convert_date(invoice.date)}")
     y += 12
     payment = "Betrag wird auf das untenstehende Geschäftskonto überwiesen." if invoice.payment == Invoice.PAYMENT_TRANSFER else "Betrag in bar erhalten."
     p.drawString(margin, y, payment)
@@ -247,7 +241,7 @@ def pdf(request, id: int):
     drawField(p, "Fahrgestellnummer", invoice.serial_number, x + 260, y, 200)
     y += 25
     drawField(p, "Kfz.-Brief Nr.", invoice.letter_no, x, y, 120)
-    drawField(p, "Erstzulassung", short_date(invoice.year), x + 140, y, 80)
+    drawField(p, "Erstzulassung", Invoice.short_date(invoice.year), x + 140, y, 80)
     drawField(p, "TÜV / AU", invoice.tuev_au, x + 240, y, 80)
     drawField(p, "Kfz.-Kennzeichen", invoice.plate, x + 340, y, 120)
     y += 25
