@@ -88,7 +88,7 @@ def pdf(request, id: int):
     p.drawString(margin + right_column_offset, y, invoice.serial_number)
     y += 12
     p.drawString(margin, y, "Erstzulassung:")
-    p.drawString(margin + right_column_offset, y, Invoice.convert_date(invoice.year))
+    p.drawString(margin + right_column_offset, y, Invoice.short_date(invoice.year))
     y += 12
     p.drawString(margin, y, "Farbe:")
     p.drawString(margin + right_column_offset, y, invoice.colour)
@@ -141,7 +141,7 @@ def pdf(request, id: int):
     p.setFont("Helvetica", 11)
     p.drawString(margin, y, "Lieferdatum entspricht Rechnungsdatum.")
     y += 12
-    p.drawString(margin, y, f"Goslar, den {Invoice.convert_date(invoice.date)}")
+    p.drawString(margin, y, f"Goslar, den {Invoice.short_date(invoice.date)}")
     y += 12
     payment = "Betrag wird auf das untenstehende Geschäftskonto überwiesen." if invoice.payment == Invoice.PAYMENT_TRANSFER else "Betrag in bar erhalten."
     p.drawString(margin, y, payment)

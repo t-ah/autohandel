@@ -51,6 +51,7 @@ class Client(SharedClientData):
         return self.client_name
     
     class Meta:
+        verbose_name = "Kunde"
         verbose_name_plural = "Kunden"
 
 

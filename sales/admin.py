@@ -18,7 +18,7 @@ class InvoiceAdmin(SortableAdminBase, admin.ModelAdmin): # sortable kann eigentl
     actions = ["make_PDF"]
     change_form_template = 'sales/invoice/change_form.html'
     form = InvoiceForm
-    list_filter = ("make",)
+    list_filter = ("complete", "make",)
     search_fields = ("number__startswith", "make__startswith")
     
     @admin.action(description="Als PDF anzeigen")
