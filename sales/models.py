@@ -43,7 +43,7 @@ class Car(SharedCarData):
     
     class Meta:
         verbose_name = "Fahrzeug"
-        verbose_name_plural = "Fahrzeuge"
+        verbose_name_plural = "🚗 Fahrzeuge"
 
 
 class Client(SharedClientData):
@@ -52,7 +52,7 @@ class Client(SharedClientData):
     
     class Meta:
         verbose_name = "Kunde"
-        verbose_name_plural = "Kunden"
+        verbose_name_plural = "👤 Kunden"
 
 
 def get_new_invoice_number():
@@ -99,4 +99,4 @@ class Invoice(SharedClientData, SharedCarData):
 
     class Meta:
         verbose_name = "Rechnung"
-        verbose_name_plural = "Rechnungen"
+        verbose_name_plural = "💰 Rechnungen"
