@@ -8,6 +8,7 @@ https://docs.djangoproject.com/en/4.2/howto/deployment/wsgi/
 """
 
 import os
+import logging
 
 from django.core.wsgi import get_wsgi_application
 from django.core.management import call_command
@@ -15,5 +16,6 @@ from django.core.management import call_command
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'autotest.settings')
 
 application = get_wsgi_application()
-print("######## Autohandel: Applying migrations ########")
+logger = logging.getLogger(__name__)
+logger.info("######## Autohandel: Applying migrations ########")
 call_command("migrate")
