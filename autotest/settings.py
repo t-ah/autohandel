@@ -148,7 +148,7 @@ LOGGING = {
         'file': {
             'level': 'DEBUG',
             'class': 'logging.FileHandler',
-            'filename': 'autohandel.log',
+            'filename': '/home/admin/autohandel/autohandel.log', # TODO server-dependent
             'formatter': 'verbose'
         },
     },
