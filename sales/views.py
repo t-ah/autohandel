@@ -25,7 +25,7 @@ def drawField(p: canvas.Canvas, description: str, value: str, x: int, y: int, le
 
 # It is said that reportlab is not thread-safe. We shall ignore that here since parallel usage is not to be expected.
 def pdf(_, id: int):
-    logging.getLogger(__name__).info("######## Autohandel: Generating PDF ########")
+    logging.getLogger("autohandel").info("######## Autohandel: Generating PDF ########")
     prefs = global_preferences_registry.manager()
 
     invoice = Invoice.objects.get(pk=id)

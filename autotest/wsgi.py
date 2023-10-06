@@ -16,6 +16,6 @@ from django.core.management import call_command
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'autotest.settings')
 
 application = get_wsgi_application()
-logger = logging.getLogger(__name__)
+logger = logging.getLogger("autohandel")
 logger.info("######## Autohandel: Applying migrations ########")
 call_command("migrate")

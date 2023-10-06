@@ -153,11 +153,6 @@ LOGGING = {
         },
     },
     'loggers': {
-        'django': {
-            'handlers':['file'],
-            'propagate': True,
-            'level':'DEBUG',
-        },
         'autohandel': {
             'handlers': ['file'],
             'level': 'DEBUG',
