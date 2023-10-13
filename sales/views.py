@@ -289,7 +289,7 @@ def pdf(_, id: int):
     p.drawCentredString(width // 2, y, "!!! Alle Zusatzvereinbarungen bedürfen der Schriftform !!!")
     y += 20
     p.setFont("Helvetica", 10)
-    p.drawString(margin, y, "Bestandteil dieses Vertrages sind folgende Analgen:")
+    p.drawString(margin, y, "Bestandteil dieses Vertrages sind folgende Anlagen:")
     y += 20
     p.drawCentredString(width // 2, y, "O  Garantieunterlagen Nr. _______    O  Zustandsbericht/Übergabeprotokoll    O  Prüfsiegel/-urkunde")
     y += 40
