@@ -144,18 +144,18 @@ LOGGING = {
             'format': '%(levelname)s %(message)s'
         },
     },
-    'handlers': {
-        'file': {
-            'level': 'DEBUG',
-            'class': 'logging.FileHandler',
-            'filename': '/home/admin/autohandel/autohandel.log', # TODO server-dependent
-            'formatter': 'verbose'
-        },
-    },
-    'loggers': {
-        'autohandel': {
-            'handlers': ['file'],
-            'level': 'DEBUG',
-        },
-    }
+    # 'handlers': {
+    #     'file': {
+    #         'level': 'DEBUG',
+    #         'class': 'logging.FileHandler',
+    #         'filename': '/home/admin/autohandel/autohandel.log', # TODO server-dependent
+    #         'formatter': 'verbose'
+    #     },
+    # },
+    # 'loggers': {
+    #     'autohandel': {
+    #         'handlers': ['file'],
+    #         'level': 'DEBUG',
+    #     },
+    # }
 }
