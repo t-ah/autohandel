@@ -55,3 +55,35 @@ class SellerNamePreference(StringPreference):
     default = ""
     required = True
     help_text = "Erscheint auf Rechnung und Kaufvertrag"
+
+
+@global_preferences_registry.register
+class CustomContractConditionOne(LongStringPreference):
+    name = "BedingungA"
+    default = "(A) Eigene Vertragsbedingung kann in den globalen Einstellungen verfasst werden."
+    required = True
+    help_text = "Kann als Vertragsbedingung ausgewählt werden"
+
+
+@global_preferences_registry.register
+class CustomContractConditionTwo(LongStringPreference):
+    name = "BedingungB"
+    default = "(B) Eigene Vertragsbedingung kann in den globalen Einstellungen verfasst werden."
+    required = True
+    help_text = "Kann als Vertragsbedingung ausgewählt werden"
+
+
+@global_preferences_registry.register
+class CustomContractConditionThree(LongStringPreference):
+    name = "BedingungC"
+    default = "(C) Eigene Vertragsbedingung kann in den globalen Einstellungen verfasst werden."
+    required = True
+    help_text = "Kann als Vertragsbedingung ausgewählt werden"
+
+
+@global_preferences_registry.register
+class CustomContractConditionFour(LongStringPreference):
+    name = "BedingungD"
+    default = "(D) Eigene Vertragsbedingung kann in den globalen Einstellungen verfasst werden."
+    required = True
+    help_text = "Kann als Vertragsbedingung ausgewählt werden"

@@ -1,5 +1,7 @@
 from django import forms
 from sales.models import Invoice, Client, Car
+from dynamic_preferences.registries import global_preferences_registry
+
 
 class InvoiceForm(forms.ModelForm):
     load_client = forms.ModelChoiceField(Client.objects.all(), label="Kundendaten einfügen", required=False)
@@ -8,6 +10,22 @@ class InvoiceForm(forms.ModelForm):
     class Meta:
         model = Invoice
         fields = "__all__"
+
+    def __init__(self, *args, **kwargs):
+        super(InvoiceForm, self).__init__(*args, **kwargs)
+        prefs = global_preferences_registry.manager()
+        choices = Invoice.TERMS_CHOICES[:]
+        choices = []
+        for k, v in Invoice.TERMS_CHOICES:
+            if k in Invoice.CUSTOM_TERMS_LIST:
+                label = prefs[k]
+                shorten_at_index = 40
+                if len(label) > shorten_at_index + 3:
+                    label = f"{label[:shorten_at_index]}..."
+                choices.append((k, label))
+            else:
+                choices.append((k, v))
+        self.fields['terms'].choices = choices
 
     def clean(self):
         cdata = super(InvoiceForm, self).clean()

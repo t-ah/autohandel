@@ -66,20 +66,28 @@ class Invoice(SharedClientData, SharedCarData):
     TERMS_6a_IGL = "6a"
     TERMS_4_NON_EU = "4"
     TERMS_4_EU = "4eu"
+    TERMS_CUSTOM_A = "BedingungA" # has to correspond with name of dynamic pref
+    TERMS_CUSTOM_B = "BedingungB"
+    TERMS_CUSTOM_C = "BedingungC"
+    TERMS_CUSTOM_D = "BedingungD"
+    CUSTOM_TERMS_LIST = [TERMS_CUSTOM_A, TERMS_CUSTOM_B, TERMS_CUSTOM_C, TERMS_CUSTOM_D]
     TERMS_CHOICES = [
         (TERMS_25a_DIFF, "§ 25a Differenzbesteuerung"),
         (TERMS_6a_IGL, "§ 6a Innergemeinschaftliche Lieferung"),
         (TERMS_4_NON_EU, "§ 4 Netto-Verkauf (Nicht-EU)"),
         (TERMS_4_EU, "§ 4 Netto-Verkauf (EU)"),
+        (TERMS_CUSTOM_A, "Eigene Bedingungen A"),
+        (TERMS_CUSTOM_B, "Eigene Bedingungen B"),
+        (TERMS_CUSTOM_C, "Eigene Bedingungen C"),
+        (TERMS_CUSTOM_D, "Eigene Bedingungen D"),
     ]
-    # number    = models.IntegerField("Rechnungsnummer", unique=True, default=get_new_invoice_number)
     number    = models.IntegerField("Rechnungsnummer (wird bei erstem PDF-Laden vergeben, wenn 0)", unique=False, default=0)
     date      = models.DateField("Rechnungsdatum", default=datetime.date.today)
     value     = models.DecimalField("Betrag (brutto)", max_digits=10, decimal_places=2, default=Decimal("0.00"))
     tax       = models.IntegerField("MWSt.-satz", default=19)
     apply_tax = models.BooleanField("MWSt. anwenden", default=False)
     payment   = models.CharField("Zahlungsmethode", max_length=2, choices=PAYMENT_CHOICES, default=PAYMENT_CASH)
-    terms     = models.CharField("Bedingungen", max_length=5, choices=TERMS_CHOICES, default=TERMS_25a_DIFF)
+    terms     = models.CharField("Bedingungen", max_length=15, choices=TERMS_CHOICES, default=TERMS_25a_DIFF) # choices now overridden in forms.py
     complete  = models.BooleanField("Abgeschlossen", default=False)
 
     @classmethod

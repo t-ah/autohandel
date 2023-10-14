@@ -158,16 +158,22 @@ def pdf_rechnung(_, id: int):
         p.drawString(margin, y, f"wird die angefallene Steuer erstattet und der Kaufpreis auf {brutto_to_netto(invoice.value, invoice.tax)}€  gemindert.")
     elif invoice.terms == Invoice.TERMS_4_EU:
         p.drawString(margin, y, "Innergemeinschaftliche Lieferung nach § 4 Nr. 1b i.V.m. § 6a UStG.")
+    else:
+        text = p.beginText()
+        text.setFont("Helvetica", 11)
+        text.setTextOrigin(margin, y)
+        text.textLines(prefs[invoice.terms])
+        p.drawText(text)
     
     y += 60
-    if invoice.terms in [Invoice.TERMS_4_EU, Invoice.TERMS_4_NON_EU]:
+    if invoice.terms in [Invoice.TERMS_25a_DIFF, Invoice.TERMS_6a_IGL]:
+        p.drawCentredString(width // 2, y, "Wir wünschen Ihnen jederzeit eine gute Fahrt!")
+    else:
         sign_line_length = 150
         p.drawCentredString(margin + (sign_line_length // 2), y, "Käufer")
         p.line(margin, y - 10, margin + sign_line_length, y - 10)
         p.drawCentredString(width - margin - (sign_line_length // 2), y, "Verkäufer")
         p.line(width - margin, y - 10, width - margin - sign_line_length, y - 10)
-    else:
-        p.drawCentredString(width // 2, y, "Wir wünschen Ihnen jederzeit eine gute Fahrt!")
 
     text = p.beginText()
     text.setFont("Helvetica-Bold", 8)
