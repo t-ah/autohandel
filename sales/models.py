@@ -78,13 +78,14 @@ class Invoice(SharedClientData, SharedCarData):
         (TERMS_4_NON_EU, "§ 4 Netto-Verkauf (Nicht-EU)"),
         (TERMS_4_EU, "§ 4 Netto-Verkauf (EU)"),
     ]
-    number   = models.IntegerField("Rechnungsnummer", unique=True, default=get_new_invoice_number)
-    date     = models.DateField("Rechnungsdatum", default=datetime.date.today)
-    value    = models.DecimalField("Betrag (brutto)", max_digits=10, decimal_places=2, default=Decimal("0.00"))
-    tax      = models.IntegerField("MWSt", default=19)
-    payment  = models.CharField("Zahlungsmethode", max_length=2, choices=PAYMENT_CHOICES, default=PAYMENT_CASH)
-    terms    = models.CharField("Bedingungen", max_length=5, choices=TERMS_CHOICES, default=TERMS_25a_DIFF)
-    complete = models.BooleanField("Abgeschlossen", default=False)
+    number    = models.IntegerField("Rechnungsnummer", unique=True, default=get_new_invoice_number)
+    date      = models.DateField("Rechnungsdatum", default=datetime.date.today)
+    value     = models.DecimalField("Betrag (brutto)", max_digits=10, decimal_places=2, default=Decimal("0.00"))
+    tax       = models.IntegerField("MWSt.-satz", default=19)
+    apply_tax = models.BooleanField("MWSt. anwenden", default=False)
+    payment   = models.CharField("Zahlungsmethode", max_length=2, choices=PAYMENT_CHOICES, default=PAYMENT_CASH)
+    terms     = models.CharField("Bedingungen", max_length=5, choices=TERMS_CHOICES, default=TERMS_25a_DIFF)
+    complete  = models.BooleanField("Abgeschlossen", default=False)
 
     @classmethod
     def convert_date(cls, date):
