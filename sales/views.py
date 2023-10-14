@@ -104,7 +104,12 @@ def pdf_rechnung(_, id: int):
 
     y += 40
 
-    if invoice.terms in [Invoice.TERMS_25a_DIFF, Invoice.TERMS_6a_IGL]:
+    if invoice.terms in [Invoice.TERMS_4_EU, Invoice.TERMS_4_NON_EU]:
+        p.setFont("Helvetica-Bold", 12)
+        p.drawString(margin, y, "Fahrzeugpreis/Summe")
+        p.setFont("Helvetica-Bold", 12)
+        p.drawRightString(width - margin, y, f"{invoice.value}   EURO")
+    else:
         p.setFont("Helvetica-Bold", 16)
         p.drawString(margin, y, "Gesamtpreis")
         p.line(margin, y + 2, width - margin, y + 2)
@@ -112,20 +117,17 @@ def pdf_rechnung(_, id: int):
         y += 40
         p.setFont("Helvetica", 11)
         p.drawString(margin, y, "Fahrzeugpreis")
-        p.drawRightString(width - margin, y, f"{invoice.value}   EURO")
+        netto = brutto_to_netto(invoice.value, invoice.tax) if invoice.apply_tax else invoice.value
+        tax = invoice.value - netto
+        p.drawRightString(width - margin, y, f"{netto}   EURO")
         y += 30
         p.drawString(margin, y, f"MwSt. {invoice.tax}%")
-        p.drawRightString(width - margin, y, f"0,00   EURO")
+        p.drawRightString(width - margin, y, f"{tax}   EURO")
         y += 30
         for line_y_offset in [2, 4, -10]:
             p.line(width - margin , y + line_y_offset, margin, y + line_y_offset)
         p.setFont("Helvetica-Bold", 11)
         p.drawString(margin, y, "Summe")
-        p.drawRightString(width - margin, y, f"{invoice.value}   EURO")
-    else: # netto-verkauf EU/nicht-EU
-        p.setFont("Helvetica-Bold", 12)
-        p.drawString(margin, y, "Fahrzeugpreis/Summe")
-        p.setFont("Helvetica-Bold", 12)
         p.drawRightString(width - margin, y, f"{invoice.value}   EURO")
 
     y += 50

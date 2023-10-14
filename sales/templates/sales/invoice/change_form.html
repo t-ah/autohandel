@@ -4,8 +4,8 @@
 
 
 {% block object-tools-items %}
-    <a href="{% url 'makePDFContract' original.pk %}" class="historylink">Kaufvertrag laden</a>
-    <a href="{% url 'makePDF' original.pk %}" class="historylink">Rechnung laden</a>
+    <a href="{% url 'makePDFContract' original.pk %}" class="viewsitelink">Kaufvertrag</a>
+    <a href="{% url 'makePDF' original.pk %}" class="viewsitelink">Rechnung</a>
     {% if has_absolute_url %}
         <li>
             <a href="{% url 'admin:view_on_site' content_type_id original.pk %}" class="viewsitelink">{% translate "View on site" %}</a>
