@@ -98,5 +98,5 @@ class Invoice(SharedClientData, SharedCarData):
         return f"#{self.number} vom {Invoice.short_date(self.date)} : {self.make} {self.model}"
 
     class Meta:
-        verbose_name = "Rechnung"
-        verbose_name_plural = "💰 Rechnungen"
+        verbose_name = "Verkauf"
+        verbose_name_plural = "💰 Verkäufe"
