@@ -15,14 +15,18 @@ class ClientAdmin(admin.ModelAdmin):
 
 
 class InvoiceAdmin(SortableAdminBase, admin.ModelAdmin): # sortable kann eigentlich raus?
-    actions = ["make_PDF"]
+    actions = ["make_PDF, make_PDF_Contract"]
     change_form_template = 'sales/invoice/change_form.html'
     form = InvoiceForm
     list_filter = ("complete", "make",)
     search_fields = ("number__startswith", "make__startswith")
     
-    @admin.action(description="Als PDF anzeigen")
+    @admin.action(description="Rechnung als PDF herunterladen")
     def make_PDF(self, request, queryset):
+        pass # template redirects to view
+
+    @admin.action(description="Kaufvertrag als PDF herunterladen")
+    def make_PDF_Contract(self, request, queryset):
         pass # template redirects to view
 
 

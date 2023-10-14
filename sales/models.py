@@ -55,12 +55,6 @@ class Client(SharedClientData):
         verbose_name_plural = "👤 Kunden"
 
 
-def get_new_invoice_number():
-        number_max = Invoice.objects.all().aggregate(models.Max('number'))['number__max']
-        if number_max:
-            return number_max + 1
-        return 1
-
 class Invoice(SharedClientData, SharedCarData):
     PAYMENT_CASH = "c"
     PAYMENT_TRANSFER = "t"
@@ -78,7 +72,8 @@ class Invoice(SharedClientData, SharedCarData):
         (TERMS_4_NON_EU, "§ 4 Netto-Verkauf (Nicht-EU)"),
         (TERMS_4_EU, "§ 4 Netto-Verkauf (EU)"),
     ]
-    number    = models.IntegerField("Rechnungsnummer", unique=True, default=get_new_invoice_number)
+    # number    = models.IntegerField("Rechnungsnummer", unique=True, default=get_new_invoice_number)
+    number    = models.IntegerField("Rechnungsnummer (wird bei erstem PDF-Laden vergeben, wenn 0)", unique=False, default=0)
     date      = models.DateField("Rechnungsdatum", default=datetime.date.today)
     value     = models.DecimalField("Betrag (brutto)", max_digits=10, decimal_places=2, default=Decimal("0.00"))
     tax       = models.IntegerField("MWSt.-satz", default=19)
@@ -95,9 +90,20 @@ class Invoice(SharedClientData, SharedCarData):
     def short_date(cls, date):
         return "{:%d.%m.%Y}".format(date)
     
+    @classmethod
+    def get_new_invoice_number(cls):
+        number_max = Invoice.objects.all().aggregate(models.Max('number'))['number__max']
+        if number_max:
+            return number_max + 1
+        return 1
+    
     def __str__(self) -> str:
         return f"#{self.number} vom {Invoice.short_date(self.date)} : {self.make} {self.model}"
 
     class Meta:
         verbose_name = "Verkauf"
         verbose_name_plural = "💰 Verkäufe"
+
+
+def get_new_invoice_number():
+    pass # just keep an older migration happy for now

@@ -23,10 +23,13 @@ def drawField(p: canvas.Canvas, description: str, value: str, x: int, y: int, le
     p.drawString(x, y + 9, description)
 
 # It is said that reportlab is not thread-safe. We shall ignore that here since parallel usage is not to be expected.
-def pdf(_, id: int):
+def pdf_rechnung(_, id: int):
     prefs = global_preferences_registry.manager()
 
     invoice = Invoice.objects.get(pk=id)
+    if invoice.number == 0:
+        invoice.number = Invoice.get_new_invoice_number()
+        invoice.save()
 
     buffer = io.BytesIO()
     p = canvas.Canvas(buffer, pagesize=A4, bottomup=0)
@@ -42,19 +45,11 @@ def pdf(_, id: int):
     text.setTextOrigin(margin, margin + 25)
     text.textLines(prefs["Firma"])
     p.drawText(text)
-    
 
     address = prefs["Adresse"].splitlines()
     p.setFont("Helvetica", 11)
     for i, line in enumerate(address):
         p.drawRightString(width - margin, margin + 10 + (i * 10), line)
-
-    # text = p.beginText()
-    # text.setFont("Helvetica", 10)
-    # text.setTextOrigin(width - 200, margin + 10)
-    # text.textLines(prefs["Adresse"])
-    # p.drawText(text)
-    # print(len(prefs["Adresse"].split("\n")))
 
     p.setFontSize(10)
     p.drawRightString(width - margin - 75, 150, f"Rechnungsnummer:")
@@ -133,7 +128,6 @@ def pdf(_, id: int):
         p.setFont("Helvetica-Bold", 12)
         p.drawRightString(width - margin, y, f"{invoice.value}   EURO")
 
-
     y += 50
     p.setFont("Helvetica-Bold", 11)
     p.drawString(margin, y, "Dieser Rechnungsbetrag ist sofort fällig.")
@@ -187,6 +181,24 @@ def pdf(_, id: int):
     p.drawRightString(width - margin, height - 80, f"USt-ID-Nr.: {prefs['UStIDNr']}")
 
     p.showPage()
+
+    p.save()
+    buffer.seek(0)
+    download_file = False # if invoice number is set by this method, we need to leave the old page which still shows 0
+    return FileResponse(buffer, as_attachment=download_file, filename=f"rechnung-{invoice.number}.pdf")
+
+
+def pdf_kaufvertrag(_, id: int):
+    prefs = global_preferences_registry.manager()
+    invoice = Invoice.objects.get(pk=id)
+    address = prefs["Adresse"].splitlines()
+
+    buffer = io.BytesIO()
+    p = canvas.Canvas(buffer, pagesize=A4, bottomup=0)
+    width, _ = A4
+    margin = 60
+
+    seller_name = prefs["Verkäufer"]
 
     p.setFont("Helvetica-Bold", 16) 
     y = margin
@@ -423,5 +435,5 @@ def pdf(_, id: int):
     p.save()
 
     buffer.seek(0)
-    download_file = True
-    return FileResponse(buffer, as_attachment=download_file, filename=f"rechnung-{invoice.number}.pdf")
+    download_file = False # stay consistent with other pdf method
+    return FileResponse(buffer, as_attachment=download_file, filename=f"kaufvertrag-{invoice.number}.pdf")
